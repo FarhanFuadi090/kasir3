@@ -55,28 +55,28 @@
 
         .search-container {
         display: flex;
-        align-items: center; /* Menjaga ikon tetap sejajar */
+        align-items: center; 
     }
     .search-input {
-        flex: 1; /* Agar input memenuhi lebar yang tersedia */
-        border-radius: 4px 0 0 4px; /* Membuat sisi kiri membulat */
+        flex: 1; 
+        border-radius: 4px 0 0 4px; 
     }
     .search-button {
-        border-radius: 0 4px 4px 0; /* Membuat sisi kanan membulat */
+        border-radius: 0 4px 4px 0; 
     }
     .search-container {
         display: flex;
         align-items: center;
-        max-width: 300px; /* Atur lebar maksimal */
+        max-width: 300px; 
     }
     .search-input {
         flex: 1;
-        height: 38px; /* Samakan tinggi dengan button */
-        border-radius: 4px 0 0 4px; /* Agar sudutnya menyatu */
+        height: 38px;
+        border-radius: 4px 0 0 4px; 
     }
     .search-button {
-        height: 38px; /* Samakan tinggi dengan input */
-        border-radius: 0 4px 4px 0; /* Agar sudutnya menyatu */
+        height: 38px; 
+        border-radius: 0 4px 4px 0; 
         display: flex;
         align-items: center;
         justify-content: center;
@@ -97,13 +97,13 @@
         </a>
     </li>
 
-    @can('admin')
+    
     <li class="nav-item">
         <a class="nav-link {{ Request::is('pelanggans*') ? 'active text-warning' : '' }}" href="{{ route('pelanggans.index') }}">
             <i class="fas fa-users"></i> Pelanggan
         </a>
     </li>
-    @endcan
+    
 
     <li class="nav-item">
         <a class="nav-link {{ Request::is('penjualans*') ? 'active text-warning' : '' }}" href="{{ route('penjualans.index') }}">

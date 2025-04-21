@@ -277,55 +277,28 @@ public function cetakStruk($id)
 
 public function laporan(Request $request)
 {
-    date_default_timezone_set('Asia/Jakarta'); // Pastikan zona waktu sesuai
+    $tanggalMulai = $request->input('tanggal_mulai');
+    $tanggalAkhir = $request->input('tanggal_akhir');
 
-    $periode = $request->get('periode', 'semua'); // Default "semua"
+    $query = DB::table('penjualans'); // or Penjualan::query() if you're using Eloquent
 
-    // Ambil data penjualan sesuai periode
-    $query = Penjualan::query();
-
-    // Ambil tanggal hari ini
-    $today = Carbon::now()->toDateString(); 
-
-    if ($periode == 'hari') {
-        $query->whereDate('tanggal_penjualan', $today);
-    } elseif ($periode == 'minggu') {
-        $query->whereBetween('tanggal_penjualan', [
-            Carbon::now()->startOfWeek()->toDateString(), 
-            Carbon::now()->endOfWeek()->toDateString()
-        ])->whereDate('tanggal_penjualan', '!=', $today); // Hapus data hari ini
-    } elseif ($periode == 'bulan') {
-        $query->whereMonth('tanggal_penjualan', Carbon::now()->month)
-              ->whereYear('tanggal_penjualan', Carbon::now()->year)
-              ->whereDate('tanggal_penjualan', '!=', $today); // Hapus data hari ini
-    } elseif ($periode == 'tahun') {
-        $query->whereYear('tanggal_penjualan', Carbon::now()->year)
-              ->whereDate('tanggal_penjualan', '!=', $today); // Hapus data hari ini
+    if ($tanggalMulai && $tanggalAkhir) {
+        $query->whereDate('created_at', '>=', $tanggalMulai)
+              ->whereDate('created_at', '<=', $tanggalAkhir);
+    } elseif ($tanggalMulai) {
+        $query->whereDate('created_at', '=', $tanggalMulai);
+    } else {
+        $query->whereDate('created_at', '=', date('Y-m-d'));
     }
 
-    $penjualans = $query->orderBy('tanggal_penjualan', 'desc')->get();
+    // Fetch the penjualans
+    $penjualans = $query->orderBy('created_at', 'desc')->get();
 
-    // Pastikan tidak menampilkan data kosong
-    if ($penjualans->isEmpty()) {
-        $penjualans = collect([
-            (object) [
-                'kode_pembayaran' => '-',
-                'tanggal_penjualan' => '-',
-                'pelanggan' => (object) ['nama_pelanggan' => '-'],
-                'produk_id' => '[]',
-                'total_bayar' => 0,
-                'metode_pembayaran' => '-',
-                'status' => '-',
-            ]
-        ]);
-    }
+    // Calculate the subtotal
+    $subtotal = $penjualans->sum('total_bayar');
 
-    // Hitung statistik
-    $totalPenjualan = $penjualans->where('kode_pembayaran', '!=', '-')->sum('total_bayar');
-    $transaksiSukses = $penjualans->where('status', 'paid')->count();
-    $transaksiGagal = $penjualans->where('status', 'unpaid')->count();
-
-    return view('laporans.index', compact('penjualans', 'totalPenjualan', 'transaksiSukses', 'transaksiGagal'));
+    // Return the view with the necessary variables
+    return view('laporans.index', compact('penjualans', 'tanggalMulai', 'tanggalAkhir', 'subtotal'));
 }
 public function getTotalPenjualan()
     {

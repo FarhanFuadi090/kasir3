@@ -18,22 +18,28 @@
                            class="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" 
                            placeholder="Cari laporan berdasarkan kode, pelanggan, atau produk...">
                 </div>
+
+                
                 
                 <!-- Filtering options with better styling -->
-                <div class="dropdown w-full md:w-auto">
-                    <button class="w-full md:w-auto flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 px-6 rounded-lg transition duration-200" 
-                            type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-calendar-alt"></i>
-                        <span>Pilih Periode</span>
-                        <i class="fas fa-chevron-down text-sm"></i>
-                    </button>
-                    <ul class="dropdown-menu w-full md:w-48 mt-1 py-2 bg-white rounded-lg shadow-lg border border-gray-100" aria-labelledby="dropdownMenuButton">
-                        <li><a class="dropdown-item block px-4 py-2 text-gray-700 hover:bg-indigo-50 transition duration-200" href="{{ route('laporans.index', ['periode' => 'hari']) }}">Hari Ini</a></li>
-                        <li><a class="dropdown-item block px-4 py-2 text-gray-700 hover:bg-indigo-50 transition duration-200" href="{{ route('laporans.index', ['periode' => 'minggu']) }}">Minggu Ini</a></li>
-                        <li><a class="dropdown-item block px-4 py-2 text-gray-700 hover:bg-indigo-50 transition duration-200" href="{{ route('laporans.index', ['periode' => 'bulan']) }}">Bulan Ini</a></li>
-                        <li><a class="dropdown-item block px-4 py-2 text-gray-700 hover:bg-indigo-50 transition duration-200" href="{{ route('laporans.index', ['periode' => 'tahun']) }}">Tahun Ini</a></li>
-                        <li><hr class="my-2 border-gray-200"></li>
-                        <li><a class="dropdown-item block px-4 py-2 text-gray-700 hover:bg-indigo-50 transition duration-200" href="{{ route('laporans.index', ['periode' => 'semua']) }}">Semua Data</a></li>
+                <div class="w-full md:w-auto">
+    <form action="{{ route('laporans.index') }}" method="GET" class="flex flex-col md:flex-row items-center gap-2">
+        <div class="flex flex-col">
+            <label for="tanggal_mulai" class="text-sm font-medium text-gray-700 mb-1">Tanggal Mulai</label>
+            <input type="date" name="tanggal_mulai" id="tanggal_mulai" class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        </div>
+        <div class="flex flex-col">
+            <label for="tanggal_akhir" class="text-sm font-medium text-gray-700 mb-1">Tanggal Selesai</label>
+            <input type="date" name="tanggal_akhir" id="tanggal_akhir" class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        </div>
+        <div class="pt-6 md:pt-0">
+            <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-6 rounded-lg transition duration-200">
+                Cari
+            </button>
+        </div>
+    </form>
+</div>
+
                     </ul>
                 </div>
             </div>
@@ -53,15 +59,35 @@
                                 </svg>
                             </div>
                             <div>
-                                <h2 class="text-3xl font-bold text-gray-800">Laporan Penjualan</h2>
-                                <p class="text-gray-500 mt-1">{{ $periodeText ?? 'Semua Periode' }}</p>
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <div class="text-sm text-gray-500">Total Penjualan</div>
-                            <div class="text-2xl font-bold text-indigo-600">Rp {{ number_format($totalPenjualan, 0, ',', '.') }}</div>
-                            <div class="text-sm text-gray-500 mt-1">{{ count($penjualans) }} Transaksi</div>
-                        </div>
+    <div class="flex justify-between items-center">
+    <div>
+    <h2 class="text-3xl font-bold text-gray-800">Laporan Penjualan</h2>
+    
+    <div class="mt-1 text-sm text-gray-500">
+    <p>
+        Periode: 
+        @if ($tanggalMulai && $tanggalAkhir)
+            {{ \Carbon\Carbon::parse($tanggalMulai)->format('d-m-Y') }} -
+            {{ \Carbon\Carbon::parse($tanggalAkhir)->format('d-m-Y') }}
+        @else
+            -
+        @endif
+    </p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+            
+                          <!-- Enhanced Print Button -->
+        <div class="non-print mt-6 flex justify-center">
+            <button class="flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 px-8 rounded-lg transition duration-200 shadow-md hover:shadow-lg" onclick="printStrukSemua()">
+                <i class="fas fa-print"></i>
+                <span>Cetak Laporan</span>
+            </button>
+        </div>
+        
                     </div>
                 </div>
             </div>
@@ -148,33 +174,23 @@
                         </tbody>
                         <!-- Improved Footer with Summary -->
                         <tfoot>
-                            <tr class="bg-gray-50">
-                                <td colspan="6" class="px-4 py-4 text-right text-sm font-medium text-gray-900">Total Penjualan</td>
-                                <td colspan="2" class="px-4 py-4 text-center text-base font-bold text-indigo-600">Rp {{ number_format($totalPenjualan, 0, ',', '.') }}</td>
+                            <tr>
+                                <td colspan="7" class="px-4 py-3 text-right text-sm font-medium text-gray-900">Subtotal</td>
+                                <td class="px-4 py-3 text-center text-sm font-medium text-gray-900">Rp {{ number_format($subtotal, 0, ',', '.') }}</td>
                             </tr>
                         </tfoot>
                     </table>
                 </div>
             </div>
-            
-            <!-- Added report footer with timestamp -->
-            <div class="mt-6 text-right text-sm text-gray-500">
-                <p>Laporan dibuat: {{ date('d/m/Y H:i') }}</p>
-            </div>
-        </div>
-        <!-- END PRINTABLE AREA -->
-
-        <!-- Enhanced Print Button -->
-        <div class="non-print mt-6 flex justify-center">
-            <button class="flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 px-8 rounded-lg transition duration-200 shadow-md hover:shadow-lg" onclick="printStrukSemua()">
-                <i class="fas fa-print"></i>
-                <span>Cetak Laporan</span>
-            </button>
         </div>
 
     </div>
 </div>
 
+            
+            <!-- Added report footer with timestamp -->
+        
+   
 <!-- Enhanced Scripts -->
 <script>
     // Search functionality

@@ -63,19 +63,23 @@
                                 @endforeach
                             </select>
                         </div>
+                        
                         <div>
-                            <label class="block text-gray-700 text-sm font-medium mb-2" for="tanggal">
-                                <span class="flex items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 text-indigo-500" viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
-                                    </svg>
-                                    Tanggal Penjualan
-                                </span>
-                            </label>
-                            <input type="date" name="tanggal_penjualan" id="tanggal" class="w-full px-3 py-2 text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150" required>
-                        </div>
-                    </div>
+            <label for="tanggal" class="block text-sm font-medium text-gray-700 mb-1">
+                <span class="flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 text-indigo-500" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
+                    </svg>
+                    Tanggal Penjualan
+                </span>
+            </label>
+            <input type="date" name="tanggal_penjualan" id="tanggal"
+                value="{{ date('Y-m-d') }}"
+                class="w-full px-3 py-2 text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150"
+                required>
                 </div>
+                    </div>
+                        </div>
                 
                 <!-- Products Section -->
                 <div class="p-6 border-b border-gray-100 bg-gray-50">

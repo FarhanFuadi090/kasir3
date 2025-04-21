@@ -1,6 +1,7 @@
 @extends('template')
 @section('content')
 
+
 <div class="container py-5">
     <!-- Baris 1: 3 kartu -->
     <div class="row g-4 justify-content-center">
@@ -10,6 +11,7 @@
                 <div class="card-icon">
                     <i class="fas fa-users"></i>
                 </div>
+                
                 <div class="stat-content">
                     <h3 class="stat-value" id="totalPelanggan">{{ $totalPelanggan ?? 0 }}</h3>
                     <p class="stat-label">Total Pelanggan</p>
@@ -53,10 +55,8 @@
                     <i class="fas fa-money-bill-wave"></i>
                 </div>
                 <div class="stat-content">
-              <h3 class="stat-value" id="totalPendapatan">
-    Rp {{ number_format($totalPendapatan ?? 0, 0, ',', '.') }}
-</h3>
-
+              <h3 class="stat-value" id="totalPendapatan">  Rp {{ number_format($totalPendapatan ?? 0, 0, ',', '.') }}</h3>
+              <p class="stat-label">Total Pendapatan</p>
                 </div>
             </div>
         </div>
